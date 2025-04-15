@@ -7,10 +7,19 @@
   postgresql,
   gemfile,
   gemfileLock,
-  gemConfig ? {},
+  gemConfig ? { },
   prod ? false,
 }:
 let
+  lib = pkgs.lib;
+  defaultGemConfig = {
+    shrine = ''
+      substituteInPlace lib/shrine/plugins/derivation_endpoint.rb --replace-fail "Content-Length" "content-length"
+      substituteInPlace lib/shrine/plugins/derivation_endpoint.rb --replace-fail "Content-Type" "content-type"
+      substituteInPlace lib/shrine/plugins/derivation_endpoint.rb --replace-fail "Content-Range" "content-range"
+      substituteInPlace lib/shrine/plugins/derivation_endpoint.rb --replace-fail "Content-Disposition" "content-disposition"
+    '';
+  };
   vendoredGems = pkgs.stdenvNoCC.mkDerivation {
     name = "vendored-gems-${name}";
     dontUnpack = true;
@@ -45,15 +54,20 @@ let
     popd
   '';
 
-  gemNames = builtins.attrNames gemConfig;
-  gemFixes = map (gemName: 
-    ''
-    pushd $(${bundler}/bin/bundle show ${gemName})
-    ${gemConfig.${gemName}}
+  mergedGemConfig = defaultGemConfig // gemConfig;
+  gemNames = builtins.attrNames mergedGemConfig;
+  gemFixes = map (gemName: ''
+    set +e
+    gemPath=$(${lib.getExe bundler} show ${gemName})
+    failed=$?
+    set -e
+    if [[ $failed -eq "0" ]] ; then
+    pushd $gemPath
+    ${mergedGemConfig.${gemName}}
     popd 
+    fi
       
-    ''
-  )  gemNames;
+  '') gemNames;
 
   gemPatchScript = pkgs.lib.strings.concatLines gemFixes;
 
@@ -99,13 +113,6 @@ pkgs.stdenv.mkDerivation {
     ${gemPatchScript}
 
     ${patchSelenium}
-
-    pushd $(${bundler}/bin/bundle show shrine)
-    substituteInPlace lib/shrine/plugins/derivation_endpoint.rb --replace-fail "Content-Length" "content-length"
-    substituteInPlace lib/shrine/plugins/derivation_endpoint.rb --replace-fail "Content-Type" "content-type"
-    substituteInPlace lib/shrine/plugins/derivation_endpoint.rb --replace-fail "Content-Range" "content-range"
-    substituteInPlace lib/shrine/plugins/derivation_endpoint.rb --replace-fail "Content-Disposition" "content-disposition"
-    popd
 
     pushd $(${bundler}/bin/bundle show tzinfo)
     substituteInPlace lib/tzinfo/data_sources/zoneinfo_data_source.rb --replace-fail "/etc/zoneinfo" "${pkgs.tzdata}/share/zoneinfo"
