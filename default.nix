@@ -13,6 +13,11 @@
 let
   lib = pkgs.lib;
   defaultGemConfig = {
+    selenium-webdriver = ''
+      substituteInPlace lib/selenium/webdriver/common/driver_finder.rb \
+            --replace-fail "paths[:driver_path]" "'${pkgs.chromedriver}/bin/chromedriver'" \
+            --replace-fail "paths[:browser_path]" "'${pkgs.chromium}/bin/chromium'"
+    '';
     shrine = ''
       substituteInPlace lib/shrine/plugins/derivation_endpoint.rb --replace-fail "Content-Length" "content-length"
       substituteInPlace lib/shrine/plugins/derivation_endpoint.rb --replace-fail "Content-Type" "content-type"
@@ -46,13 +51,6 @@ let
       gem --version > $out/gem_version
     '';
   };
-  patchSelenium = pkgs.lib.optionalString (pkgs.stdenv.isLinux && !prod) ''
-    pushd $(${bundler}/bin/bundle show selenium-webdriver)
-    substituteInPlace lib/selenium/webdriver/common/driver_finder.rb \
-          --replace-fail "paths[:driver_path]" "'${pkgs.chromedriver}/bin/chromedriver'" \
-          --replace-fail "paths[:browser_path]" "'${pkgs.chromium}/bin/chromium'"
-    popd
-  '';
 
   mergedGemConfig = defaultGemConfig // gemConfig;
   gemNames = builtins.attrNames mergedGemConfig;
@@ -111,8 +109,6 @@ pkgs.stdenv.mkDerivation {
     bundle install --local
 
     ${gemPatchScript}
-
-    ${patchSelenium}
 
     pushd $(${bundler}/bin/bundle show tzinfo)
     substituteInPlace lib/tzinfo/data_sources/zoneinfo_data_source.rb --replace-fail "/etc/zoneinfo" "${pkgs.tzdata}/share/zoneinfo"
