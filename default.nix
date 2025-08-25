@@ -134,6 +134,10 @@ pkgs.stdenv.mkDerivation {
     bundle config --delete cache_path
     cp -av $HOME/.bundle/config $out/config
     find "$out" -type f -exec remove-references-to -t ${vendoredGems} '{}' +
+    # remove lockfiles of dependecies
+    find "$out" -name Gemfile.lock -type f -exec rm '{}' +
+    find "$out" -name Cargo.lock -type f -exec rm '{}' +
+    find "$out" -name yarn.lock -type f -exec rm '{}' +
   '';
   passthru = {
     inherit vendoredGems;
