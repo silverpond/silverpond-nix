@@ -105,6 +105,9 @@ pkgs.stdenv.mkDerivation {
     bundle config path $out
     bundle config set frozen 'true'
     bundle config build.sassc --disable-lto
+
+    # https://github.com/ruby-numo/numo-narray/pull/246
+    bundle config build.numo-narray "--with-cflags='-Wno-error=incompatible-pointer-types -std=gnu17'"
     bundle config set without '${pkgs.lib.optionalString (prod) "development test"}'
     bundle install --local
 
