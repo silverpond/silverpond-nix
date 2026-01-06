@@ -82,13 +82,16 @@ pyfinal: pyprev: {
     pythonRemoveDeps = [ "numpy" ];
     pythonRelaxDeps = [
       "alembic"
+      "av"
       "avro"
       "boto3"
+      "gql"
       "numpy"
       "paho-mqtt"
       "pillow"
       "psutil"
       "pydantic"
+      "pyperclip"
       "pyzmq"
       "tomli-w"
       "websockets"
