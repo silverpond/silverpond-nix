@@ -36,3 +36,8 @@ Run the shell via HTTPS:
 ```bash
 nix-shell https://github.com/silverpond/silverpond-nix/archive/master.tar.gz --arg cuda true
 ```
+
+The shell includes `highlighter-sdk`, providing the `hl` command:
+```bash
+hl --help
+```
