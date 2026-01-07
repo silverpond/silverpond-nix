@@ -36,48 +36,58 @@ pyfinal: pyprev: {
         cookiecutter
         fastavro
         gql
-        jupyter
-        litellm
-        matplotlib
-        onnx
-        onnxruntime
-        opencv4
         pandas
         pillow
         pooch
         pybreaker
         pydantic
-        pykalman
-        pytest
         python-magic
         pyyaml
         requests
         scipy
         shapely
         sqlmodel
-        tables
         tenacity
         tomli-w
-        torch
-        torchvision
         tqdm
 
         # aiko
         asciimatics
         avro
+        avro-validator
         paho-mqtt
         psutil
         pyperclip
         pyzmq
         transitions
         wrapt
-
-        onnx
-        onnxruntime
-        jupyter
       ]
       ++ pyfinal.gql.optional-dependencies.aiohttp
       ++ pyfinal.gql.optional-dependencies.requests;
+
+    optional-dependencies = with pyfinal; {
+      cv2 = [ opencv4 ];
+      predictors = [
+        opencv4
+        torch
+        onnxruntime
+      ];
+      yolo = [
+        opencv4
+        torch
+        onnx
+        onnxruntime
+        ultralytics
+      ];
+      tracker = [
+        pykalman
+        torch
+      ];
+      matplotlib = [ matplotlib ];
+      rtspserver = [ pygobject3 ];
+      hdf = [ tables ];
+    };
+
     nativeBuildInputs = [ pyfinal.pythonRelaxDepsHook ];
     pythonRemoveDeps = [ "numpy" ];
     pythonRelaxDeps = [
