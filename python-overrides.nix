@@ -61,6 +61,7 @@ pyfinal: pyprev: {
         torch
         torchvision
         tqdm
+        zeroconf
 
         # aiko
         asciimatics
