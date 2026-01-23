@@ -7,13 +7,13 @@ pyfinal: pyprev: {
   };
   highlighter-sdk = pyfinal.buildPythonPackage rec {
     pname = "highlighter-sdk";
-    version = "2.6.28";
+    version = "2.6.35";
     pyproject = true;
 
     src = pkgs.fetchPypi {
       pname = "highlighter_sdk";
       inherit version;
-      hash = "sha256-AZ/kIhSI/O8NHlubG1vg3vKGJ0gZF8jXOTFRkOvYaYM=";
+      hash = "sha256-Qo0ezi/soa1taDgK0abSR7JVddlCC8H4DL1+e6ts0U4=";
     };
 
     postPatch = ''
@@ -50,6 +50,7 @@ pyfinal: pyprev: {
         tenacity
         tomli-w
         tqdm
+        zeroconf
 
         # aiko
         asciimatics
