@@ -7,13 +7,13 @@ pyfinal: pyprev: {
   };
   highlighter-sdk = pyfinal.buildPythonPackage rec {
     pname = "highlighter-sdk";
-    version = "2.6.35";
+    version = "2.6.37";
     pyproject = true;
 
     src = pkgs.fetchPypi {
       pname = "highlighter_sdk";
       inherit version;
-      hash = "sha256-Qo0ezi/soa1taDgK0abSR7JVddlCC8H4DL1+e6ts0U4=";
+      hash = "sha256-tsO72RWEIyaqk7haetYZQO4QCz4Akw7sExUMMnzymCU=";
     };
 
     postPatch = ''
@@ -36,6 +36,7 @@ pyfinal: pyprev: {
         cookiecutter
         fastavro
         gql
+        litellm
         pandas
         pillow
         pooch
