@@ -80,6 +80,7 @@ pyfinal: pyprev: {
         onnx
         onnxruntime
         ultralytics
+        segmentation-models-pytorch
       ];
       tracker = [
         pykalman
