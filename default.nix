@@ -54,7 +54,7 @@ let
   gemNames = builtins.attrNames mergedGemConfig;
   gemFixes = map (gemName: ''
     set +e
-    gemPath=$(${lib.getExe' ruby "bundler"} show ${gemName})
+    gemPath=$(${lib.getExe' ruby "bundle"} show ${gemName})
     failed=$?
     set -e
     if [[ $failed -eq "0" ]] ; then
@@ -98,13 +98,13 @@ pkgs.stdenv.mkDerivation {
     cp ${gemfileLock} Gemfile.lock
     cp -a ${vendoredGems} bundler_wants_writable_cache_to_rewrite_gemspecs
     chmod -R +w bundler_wants_writable_cache_to_rewrite_gemspecs
-    bundle config cache_path bundler_wants_writable_cache_to_rewrite_gemspecs
-    bundle config path $out
+    bundle config set cache_path bundler_wants_writable_cache_to_rewrite_gemspecs
+    bundle config set path $out
     bundle config set frozen 'true'
-    bundle config build.sassc --disable-lto
+    bundle config set build.sassc --disable-lto
 
     # https://github.com/ruby-numo/numo-narray/pull/246
-    bundle config build.numo-narray "--with-cflags='-Wno-error=incompatible-pointer-types -std=gnu17'"
+    bundle config set build.numo-narray "--with-cflags='-Wno-error=incompatible-pointer-types -std=gnu17'"
     bundle config set without '${pkgs.lib.optionalString (prod) "development test"}'
     bundle install --local
 
