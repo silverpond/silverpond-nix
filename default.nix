@@ -3,7 +3,6 @@
   hash,
   pkgs,
   ruby,
-  bundler,
   postgresql,
   gemfile,
   gemfileLock,
@@ -33,7 +32,6 @@ let
     outputHashAlgo = "sha256";
     nativeBuildInputs = with pkgs; [
       git
-      bundler
       ruby
     ];
     outputHash = hash;
@@ -43,7 +41,7 @@ let
       mkdir $out
       HOME=$TMP
       export GIT_SSL_CAINFO="${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
-      bundle config cache_path $out
+      bundle config set cache_path $out
       bundle config set cache_all true
       bundle config set cache_all_platforms true
       BUNDLE_RETRY=10 BUNDLE_TIMEOUT=20 bundle cache --no-install
@@ -56,7 +54,7 @@ let
   gemNames = builtins.attrNames mergedGemConfig;
   gemFixes = map (gemName: ''
     set +e
-    gemPath=$(${lib.getExe bundler} show ${gemName})
+    gemPath=$(${lib.getExe' ruby "bundle"} show ${gemName})
     failed=$?
     set -e
     if [[ $failed -eq "0" ]] ; then
@@ -79,7 +77,6 @@ pkgs.stdenv.mkDerivation {
     [
       ruby
       git
-      bundler
       gnumake
       libyaml
       libexif
@@ -101,19 +98,19 @@ pkgs.stdenv.mkDerivation {
     cp ${gemfileLock} Gemfile.lock
     cp -a ${vendoredGems} bundler_wants_writable_cache_to_rewrite_gemspecs
     chmod -R +w bundler_wants_writable_cache_to_rewrite_gemspecs
-    bundle config cache_path bundler_wants_writable_cache_to_rewrite_gemspecs
-    bundle config path $out
+    bundle config set cache_path bundler_wants_writable_cache_to_rewrite_gemspecs
+    bundle config set path $out
     bundle config set frozen 'true'
-    bundle config build.sassc --disable-lto
+    bundle config set build.sassc --disable-lto
 
     # https://github.com/ruby-numo/numo-narray/pull/246
-    bundle config build.numo-narray "--with-cflags='-Wno-error=incompatible-pointer-types -std=gnu17'"
+    bundle config set build.numo-narray "--with-cflags='-Wno-error=incompatible-pointer-types -std=gnu17'"
     bundle config set without '${pkgs.lib.optionalString (prod) "development test"}'
     bundle install --local
 
     ${gemPatchScript}
 
-    pushd $(${bundler}/bin/bundle show tzinfo)
+    pushd $(${ruby}/bin/bundle show tzinfo)
     substituteInPlace lib/tzinfo/data_sources/zoneinfo_data_source.rb --replace-fail "/etc/zoneinfo" "${pkgs.tzdata}/share/zoneinfo"
     popd
 
@@ -130,7 +127,7 @@ pkgs.stdenv.mkDerivation {
       patchShebangs --build $i
       ln -s $i $out/bin/$(basename $i)
     done
-    makeWrapper ${bundler}/bin/bundle $out/bin/bundle \
+    makeWrapper ${ruby}/bin/bundle $out/bin/bundle \
       --set BUNDLE_APP_CONFIG $out
 
     # removing reference to vendoredGems
