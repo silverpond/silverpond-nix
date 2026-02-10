@@ -7,13 +7,13 @@ pyfinal: pyprev: {
   };
   highlighter-sdk = pyfinal.buildPythonPackage rec {
     pname = "highlighter-sdk";
-    version = "2.6.38";
+    version = "2.6.40";
     pyproject = true;
 
     src = pkgs.fetchPypi {
       pname = "highlighter_sdk";
       inherit version;
-      hash = "sha256-djwXSr0FHw+5KrfAzi/VqJ/3zN/1Me5mpu41/yV0qNg=";
+      hash = "sha256-svaOqGn8j20Yeycie4wxtpgFp+Lrbbp9vk79bdRnq50=";
     };
 
     postPatch = ''
