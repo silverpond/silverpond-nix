@@ -69,10 +69,22 @@ pyfinal: pyprev: {
 
     optional-dependencies = with pyfinal; {
       cv2 = [ opencv4 ];
+      hdf = [ tables ];
+      matplotlib = [ matplotlib ];
       predictors = [
         opencv4
         torch
         onnxruntime
+      ];
+      rtspserver = [ pygobject3 ];
+      telemetry = [
+	opentelemetry-sdk
+	opentelemetry-api
+	opentelemetry-exporter-otlp
+      ];
+      tracker = [
+        pykalman
+        torch
       ];
       yolo = [
         opencv4
@@ -82,13 +94,6 @@ pyfinal: pyprev: {
         ultralytics
         segmentation-models-pytorch
       ];
-      tracker = [
-        pykalman
-        torch
-      ];
-      matplotlib = [ matplotlib ];
-      rtspserver = [ pygobject3 ];
-      hdf = [ tables ];
     };
 
     nativeBuildInputs = [ pyfinal.pythonRelaxDepsHook ];
