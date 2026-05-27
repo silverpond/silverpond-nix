@@ -106,6 +106,7 @@ pkgs.stdenv.mkDerivation {
     # https://github.com/ruby-numo/numo-narray/pull/246
     bundle config set build.numo-narray "--with-cflags='-Wno-error=incompatible-pointer-types -std=gnu17'"
     bundle config set without '${pkgs.lib.optionalString (prod) "development test"}'
+    export MAKEFLAGS="-j$NIX_BUILD_CORES"
     bundle install --local
 
     ${gemPatchScript}
