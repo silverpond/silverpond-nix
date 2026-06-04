@@ -36,6 +36,7 @@ pyfinal: pyprev: {
         cookiecutter
         fastavro
         gql
+        keyring
         litellm
         pandas
         pillow
@@ -52,6 +53,7 @@ pyfinal: pyprev: {
         tomli-w
         tqdm
         zeroconf
+        zstandard
 
         # aiko
         asciimatics
