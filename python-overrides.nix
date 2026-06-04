@@ -18,8 +18,8 @@ pyfinal: pyprev: {
 
     postPatch = ''
       substituteInPlace pyproject.toml \
-        --replace-fail 'packages = ["src/highlighter", "src/aiko_services"]' \
-                       'packages = ["highlighter", "aiko_services"]'
+        --replace-fail 'packages = ["src/highlighter", "src/aiko_services", "src/moondream_torch"]' \
+                       'packages = ["highlighter", "aiko_services", "src/moondream_torch"]'
 
     '';
 
