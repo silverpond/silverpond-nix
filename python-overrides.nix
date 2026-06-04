@@ -7,13 +7,13 @@ pyfinal: pyprev: {
   };
   highlighter-sdk = pyfinal.buildPythonPackage rec {
     pname = "highlighter-sdk";
-    version = "2.6.44";
+    version = "2.6.74";
     pyproject = true;
 
     src = pkgs.fetchPypi {
       pname = "highlighter_sdk";
       inherit version;
-      hash = "sha256-9Dw6k/S+upoAc8Yh1wvpJxS0QgkMpXi49bB5Z9Z9kv0=";
+      hash = "sha256-hcmrn7Uc2e67/AierOce87BxRry3Vo5+KivfupTuNMY=";
     };
 
     postPatch = ''
@@ -36,6 +36,7 @@ pyfinal: pyprev: {
         cookiecutter
         fastavro
         gql
+        keyring
         litellm
         pandas
         pillow
@@ -52,6 +53,7 @@ pyfinal: pyprev: {
         tomli-w
         tqdm
         zeroconf
+        zstandard
 
         # aiko
         asciimatics
